@@ -1,0 +1,10 @@
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\bin\Debug\Combat Tracker.exe.config
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\bin\Debug\Combat Tracker.exe
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\bin\Debug\Combat Tracker.pdb
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat Tracker.csprojResolveAssemblyReference.cache
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat_Tracker.Properties.Resources.resources
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat Tracker.csproj.GenerateResource.Cache
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat Tracker.csproj.CoreCompileInputs.cache
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat Tracker.exe
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat Tracker.pdb
+C:\Users\Dan\source\repos\Combat Tracker\Combat Tracker\obj\Debug\Combat_Tracker.Main.resources
