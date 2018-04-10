@@ -135,7 +135,7 @@ namespace Combat_Tracker
                         answer = 5;
                         sixes++;
                     }
-                    else if (x > answer)
+                    else if (x > answer & x!=6)
                     {
                         answer = x;
                     }
@@ -145,10 +145,11 @@ namespace Combat_Tracker
                     if(x <= answer || answer ==0)
                     { answer = x; }
                 }
-                answer += sixes;
-                this.combatStep = answer + perAtt + (csCPX / 10)- wounds;
-                this.ocombatStep = answer + perAtt + (csCPX / 10);
+
             }
+            answer += sixes;
+            this.combatStep = answer + perAtt + (csCPX / 10) - wounds;
+            this.ocombatStep = answer + perAtt + (csCPX / 10);
         }
         public void ApplyWounds(int x)
         {

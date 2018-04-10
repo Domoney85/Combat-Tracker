@@ -95,6 +95,7 @@ namespace Combat_Tracker
            modTXT.BringToFront();
 
             Button register = new Button();
+            register.Name = "register";
             register.Text = "Enter Combat";
             register.Font = new Font("Sans Serif", 7, FontStyle.Regular);
             register.Location = new Point(125, 28);
@@ -171,8 +172,11 @@ namespace Combat_Tracker
                 {
                     if ( x is Button)
                     {
-                        x.Parent.BackColor = Color.DarkGray;
-                        x.Text = "Leave Combat";
+                        if (x.Name == "register")
+                        {
+                            x.Parent.BackColor = Color.DarkGray;
+                            x.Text = "Leave Combat";
+                        }
                     }
                 }
             }
@@ -186,8 +190,11 @@ namespace Combat_Tracker
                 {
                     if (x is Button)
                     {
-                        x.Parent.BackColor = Color.WhiteSmoke;
-                        x.Text = "Enter Combat";
+                        if (x.Name == "register")
+                        {
+                            x.Parent.BackColor = Color.WhiteSmoke;
+                            x.Text = "Enter Combat";
+                        }
                     }
                 }
             }
