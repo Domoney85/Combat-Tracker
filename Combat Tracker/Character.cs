@@ -114,7 +114,6 @@ namespace Combat_Tracker
             int sixes = 0;
             int answer = 0;
             int[]DiceBlock = new int[csSkill];
-
             if (csSkill == 0) DiceBlock = new int[2];
             
             if (assist == false)
