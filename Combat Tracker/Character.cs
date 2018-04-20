@@ -8,169 +8,128 @@ namespace Combat_Tracker
 {
     class Character
     {
-        private String name;
-        private int csSkill;
-        private int csCPX;
-        private int perAtt;
-        private int willAtt;
-        private int misc;
-        private int wounds;
-        private double ocombatStep;
-        private String rName;
-        private int count;
-        private bool isDown;
         public static Random rnd = new Random();
 
-        private double combatStep;
-        private bool assist = false;
+        public bool IsDown { get; set; }
+        public int Wounds { get; set; }
+        public double CombatStep { get; set; }
 
-       
+        public String Name { get; private set; }
+        public String RName { get; private set; } // TODO: better name for this?
+        public int Skill { get; private set; }
+        public int Complexity { get; private set; }
+        public int Perception { get; private set; }
+        public int Will { get; private set; }
+
+        private int misc;
+        private int count;
+        private double ocombatStep;
+
+        private bool assist;
+
+        public Character(String n)
+            : this(n, 0, 0, 0, 0)
+        { }
+
+        public Character(String n, int sk, int cpx, int p, int w)
+            : this(n, sk, cpx, p, w, 0, 0)
+        { }
 
         public Character(String n, int sk, int cpx, int p, int w, int m, int wo)
         {
-            name = n;
-            rName = n;
-           csSkill = sk;
-            csCPX = cpx;
-            perAtt = p;
-            willAtt = w;
+            Name = RName = n;
+            Skill = sk;
+            Complexity = cpx;
+            Perception = p;
+            Will = w;
             misc = m;
-            wounds = wo;
-            
-        }
-        public Character(String n, int sk, int cpx,int p,int w)
-        {
-            name = n;
-            rName = n;
-            csSkill = sk;
-            csCPX = cpx;
-            perAtt = p;
-            willAtt = w;
-            misc = 0;
-            wounds = 0;
-        }
-        public Character(String n)
-        {
-            name = n;
-            rName = n;
-            csSkill = 0;
-            csCPX = 0;
-            perAtt = 0;
-            willAtt = 0;
-            misc = 0;
-            wounds = 0;
+            Wounds = wo;
+            assist = false;
         }
 
-        public String getName()
-        {
-            return name;
-        }
-        public String getrName()
-        {
-            return rName;
-        }
-        public int getSkill()
-        {
-            return csSkill;
-        }
-        public int getCPX()
-        {
-            return csCPX;
-        }
-        public int getPer()
-        {
-            return perAtt;
-        }
-        public int getWill()
-        {
-            return willAtt;
-        }
-        public void setDown(Boolean x)
-        {
-            isDown = x;
-        }
-        public Boolean getDown()
-        {
-            return isDown;
-        }
-        public void setWound(int wo)
-        {
-            wounds = wo;
-        }
+        /// <summary>
+        /// Handles duplicate name generation
+        /// probably a better way to play with this.
+        /// </summary>
         public void SetCount()
         {
             ++count;
-            if (count >1)
+            if (count > 1)
             {
-                name = rName+" "+count.ToString();
+                Name = RName + " " + count.ToString();
             }
             else
             {
-                name = rName;
+                Name = RName;
             }
         }
+
         public void SetCombatStep()
         {
             int sixes = 0;
             int answer = 0;
-            int[]DiceBlock = new int[csSkill];
-            if (csSkill == 0) DiceBlock = new int[2];
-            
+            int[] DiceBlock = new int[Skill];
+            if (Skill == 0) DiceBlock = new int[2];
             if (assist == false)
             {
 
                 for (int i = 0; i < DiceBlock.Length; i++)
                 {
-                    
-                    DiceBlock[i] = rnd.Next(1, 7); 
+
+                    DiceBlock[i] = rnd.Next(1, 7);
                 }
             }
             foreach (int x in DiceBlock)
             {
-                if (csSkill != 0)
+                if (Skill != 0)
                 {
                     if (x == 6)
                     {
                         answer = 5;
                         sixes++;
                     }
-                    else if (x > answer & x!=6)
+                    else if (x > answer & x != 6)
                     {
                         answer = x;
                     }
                 }
                 else
                 {
-                    if(x <= answer || answer ==0)
+                    if (x <= answer || answer == 0)
                     { answer = x; }
                 }
 
             }
             answer += sixes;
-            this.combatStep = answer + perAtt + (csCPX / 10) - wounds;
-            this.ocombatStep = answer + perAtt + (csCPX / 10);
+            CombatStep = answer + Perception + (Complexity / 10) - Wounds;
+            ocombatStep = answer + Perception + (Complexity / 10);
         }
+
         public void ApplyWounds(int x)
         {
-            wounds = x;
-            combatStep = ocombatStep - wounds;
+            Wounds = x;
+            CombatStep = ocombatStep - Wounds;
         }
-        public void bumpUp()
+
+        public void BumpUp()
         {
-            ++combatStep;
+            ++CombatStep;
         }
-        public void bumpDown()
+
+        public void BumpDown()
         {
-            --combatStep;
+            --CombatStep;
         }
-        public void SetCombatStep(double n)
-        {
-            combatStep = n;
-        }
-        public double getCombatStep()
-        {
-            return combatStep;
-        }
+
+        //public void SetCombatStep(double n)
+        //{
+        //    combatStep = n;
+        //}
+
+        //public double getCombatStep()
+        //{
+        //    return combatStep;
+        //}
     }
 
 }
