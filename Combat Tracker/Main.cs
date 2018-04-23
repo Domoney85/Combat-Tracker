@@ -6,29 +6,30 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Collections;
 using System.IO;
+using System.Threading;
 
 namespace Combat_Tracker
 {
 
     public partial class Main : Form
     {
-        ArrayList combatants;
-        List<Character> inCombat;
-        List<Character> sortedCombat;
+        private int characterIds = 0;
+        List<Character> combatants;
+        //List<Character> inCombat;
 
         public Main()
         {
             InitializeComponent();
-            combatants = new ArrayList();
-            inCombat = new List<Character>();
-            sortedCombat = new List<Character>();
+            combatants = new List<Character>();
+            //inCombat = new List<Character>();
         }
 
         private void Main_Load(object sender, EventArgs e) { }
 
-        private void CreatePNL_Click(object sender, EventArgs e)
+        private void CreateCharacterButton_Click(object sender, EventArgs e)
         {
             Character current = new Character(
+                    Interlocked.Increment(ref characterIds),
                     CharName.Text,
                     Convert.ToInt32(csInput.Text),
                     Convert.ToInt32(cpxInput.Text),
@@ -38,118 +39,188 @@ namespace Combat_Tracker
             AddBatch(current);
         }
 
-        private void PanelCreate(Character current)
+        private Panel CreateCharacterPanel(Character character)
         {
-            Panel CharPanel = new Panel();
-
-            CharPanel.Name = current.Name;
-            CharPanel.Location = new Point(10, 10);
-            CharPanel.BackColor = Color.WhiteSmoke;
-            CharPanel.Size = new Size(190, 55);
-            CharPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            flowLayoutPanel1.Controls.Add(CharPanel);
+            Panel newPanel = new Panel();
+            newPanel.Name = character.Name;
+            newPanel.Location = new Point(5, 6);
+            newPanel.BackColor = Color.WhiteSmoke;
+            newPanel.Size = new Size(190, 64);
+            newPanel.BorderStyle = BorderStyle.Fixed3D;
 
             Label CharacterID = new Label();
-            Label CharacterSkill = new Label();
-            Label skillLBL = new Label();
-            Label cpxLBL = new Label();
-            Label willLBL = new Label();
-            Label modLBL = new Label();
-
-            CharacterID.Text = current.Name;
+            CharacterID.Text = character.Name;
             CharacterID.Font = new Font("Sans Serif", 10, FontStyle.Bold);
             CharacterID.Location = new Point(3, 0);
             CharacterID.AutoSize = true;
 
+            Label skillLBL = new Label();
             skillLBL.Text = "CS Skill";
             skillLBL.Margin = new Padding(0, 0, 0, 0);
             skillLBL.Padding = new Padding(0, 0, 0, 0);
             skillLBL.Location = new Point(6, 18);
 
-            CharacterSkill.Text = current.Skill.ToString() + "/" + current.Complexity.ToString() + "+" + current.Perception.ToString();
+            Label CharacterSkill = new Label();
+            CharacterSkill.Text = character.Skill.ToString() + "/" + character.Complexity.ToString() + "+" + character.Perception.ToString();
             CharacterSkill.Location = new Point(48, 18);
 
-            willLBL.Text = "Will: " + current.Will.ToString();
+            Label willLBL = new Label();
+            willLBL.Text = "Will: " + character.Will.ToString();
+            willLBL.Font = new Font("Sans Serif", 7, FontStyle.Regular);
             willLBL.Location = new Point(6, 32);
 
-            modLBL.Text = "Mod:";
+            Label modLBL = new Label();
+            modLBL.Text = "Wounds:";
             modLBL.Font = new Font("Sans Serif", 7, FontStyle.Regular);
-            modLBL.Location = new Point(55, 32);
+            modLBL.Location = new Point(45, 32);
 
-            CharPanel.Controls.Add(modLBL);
-            CharPanel.Controls.Add(willLBL);
-            CharPanel.Controls.Add(CharacterSkill);
-            CharPanel.Controls.Add(skillLBL);
-            CharPanel.Controls.Add(CharacterID);
+            newPanel.Controls.Add(modLBL);
+            newPanel.Controls.Add(willLBL);
+            newPanel.Controls.Add(CharacterSkill);
+            newPanel.Controls.Add(skillLBL);
+            newPanel.Controls.Add(CharacterID);
 
             TextBox modTXT = new TextBox();
-            modTXT.TextChanged += new System.EventHandler(modTXT_TextChanged);
+            modTXT.TextChanged += new EventHandler(modTXT_TextChanged);
             modTXT.Location = new Point(92, 28);
             modTXT.Size = new Size(25, 5);
-            CharPanel.Controls.Add(modTXT);
+            newPanel.Controls.Add(modTXT);
             modTXT.BringToFront();
 
             Button register = new Button();
-            register.Name = "register";
+            register.Name = character.ID.ToString();
             register.Text = "Enter Combat";
             register.Font = new Font("Sans Serif", 7, FontStyle.Regular);
             register.Location = new Point(125, 28);
             register.Size = new Size(50, 20);
-            register.Click += new System.EventHandler(register_Click);
-            CharPanel.Controls.Add(register);
-            register.BringToFront();
+            register.Click += new EventHandler(register_Click);
+            newPanel.Controls.Add(register);
 
             Button down = new Button();
             down.Text = "Down";
             down.Font = new Font("Sans Serif", 7, FontStyle.Regular);
             down.Location = new Point(125, 3);
             down.Size = new Size(50, 20);
-            down.Click += new System.EventHandler(down_Click);
-            CharPanel.Controls.Add(down);
+            down.Click += new EventHandler(down_Click);
+            newPanel.Controls.Add(down);
             down.BringToFront();
+
+            register.BringToFront();
+
+            return newPanel;
+        }
+
+        private void PopulateCombat(List<Character> x)
+        {
+            CombatOrder.Controls.Clear();
+
+            foreach (Character com in x)
+            {
+                Panel CombatPanel = new Panel();
+                CombatPanel.Name = com.Name;
+                CombatPanel.Location = new Point(10, 10);
+                CombatPanel.BackColor = Color.WhiteSmoke;
+                CombatPanel.Size = new Size(234, 75);
+                CombatPanel.BorderStyle = BorderStyle.Fixed3D;
+                CombatOrder.Controls.Add(CombatPanel);
+
+                Panel characterPanel = CreateCharacterPanel(com);
+                CombatPanel.Controls.Add(characterPanel);
+
+                GroupBox rollBox = new GroupBox();
+                rollBox.Size = new Size(30, 70);
+                rollBox.Location = new Point(195, 0);
+                CombatPanel.Controls.Add(rollBox);
+
+                Button up = new Button();
+                up.Location = new Point(2, 10);
+                up.Size = new Size(25, 15);
+                up.BackgroundImage = Properties.Resources.up_arrow;
+                up.BackgroundImageLayout = ImageLayout.Stretch;
+                up.Click += new EventHandler(upOrder_Click);
+                rollBox.Controls.Add(up);
+                up.BringToFront();
+
+                Label combatRoll = new Label();
+                combatRoll.Location = new Point(2, 30);
+                combatRoll.Size = new Size(25, 15);
+                combatRoll.Text = com.CombatStep.ToString();
+                combatRoll.Font = new Font("Sans Serif", 9, FontStyle.Bold);
+                combatRoll.TextAlign = ContentAlignment.MiddleCenter;
+                rollBox.Controls.Add(combatRoll);
+                combatRoll.BringToFront();
+
+                Button down = new Button();
+                down.Location = new Point(2, 50);
+                down.Size = new Size(25, 15);
+                down.BackgroundImage = Properties.Resources.down_arrow;
+                down.BackgroundImageLayout = ImageLayout.Stretch;
+                down.Click += new EventHandler(downOrder_Click);
+                rollBox.Controls.Add(down);
+                down.BringToFront();
+            }
         }
 
         private void modTXT_TextChanged(object sender, EventArgs e)
         {
-            int wounded = 0;
-            TextBox woundBox = (TextBox)sender;
-            if (int.TryParse(woundBox.Text, out int n))
+            int wounds = 0;
+            TextBox woundTextBox = (TextBox)sender;
+
+            // adds wounds
+            if (int.TryParse(woundTextBox.Text, out int n))
             {
-                wounded = n;
+                wounds = n;
             }
+
+            // finds the combatant and adds wounds
             foreach (Character c in combatants)
             {
-                if (woundBox.Parent.Name == c.Name)
+                if (woundTextBox.Parent.Name == c.Name)
                 {
-                    c.ApplyWounds(wounded);
+                    c.ApplyWounds(wounds);
                 }
             }
-            foreach (Character c in inCombat)
-            {
-                if (woundBox.Parent.Name == c.Name)
-                {
-                    c.ApplyWounds(wounded);
-                }
-            }
+
+            // finds the combat list and adds wounds
+            //foreach (Character c in inCombat)
+            //{
+            //    if (woundTextBox.Parent.Name == c.Name)
+            //    {
+            //        c.ApplyWounds(wounds);
+            //    }
+            //}
+
+            // this probably isn't needed. the order shouldn't change until 
+            // next combat round
+            /*
             var sortedQuery = inCombat.OrderByDescending(k => k.CombatStep);
             sortedCombat.Clear();
             CombatOrder.Controls.Clear();
             sortedCombat = sortedQuery.ToList();
             PopulateCombat(sortedCombat);
+            */
         }
+
         private void register_Click(object sender, EventArgs e)
         {
             Button x = (Button)sender;
-            if (x.Text == "Enter Combat")
+            foreach (Character c in combatants)
             {
-                x.Parent.BackColor = Color.DarkGray;
-                x.Text = "Leave Combat";
-
-            }
-            else
-            {
-                x.Parent.BackColor = Color.WhiteSmoke;
-                x.Text = "Enter Combat";
+                if (c.ID.ToString().Equals(x.Name))
+                {
+                    if (x.Text == "Enter Combat")
+                    {
+                        x.Parent.BackColor = Color.DarkGray;
+                        x.Text = "Leave Combat";
+                        c.InCombat = true;
+                    }
+                    else
+                    {
+                        x.Parent.BackColor = Color.WhiteSmoke;
+                        x.Text = "Enter Combat";
+                        c.InCombat = false;
+                    }
+                }
             }
         }
 
@@ -167,7 +238,14 @@ namespace Combat_Tracker
                 {
                     if (x is Button)
                     {
-                        if (x.Name == "register")
+                        combatants.Where(c => x.Name.Equals(c.ID.ToString()))
+                                .ToList()
+                                .ForEach(ch =>
+                                {
+                                    ch.InCombat = true;
+                                });
+
+                        if (x.Name == "Enter Combat")
                         {
                             x.Parent.BackColor = Color.DarkGray;
                             x.Text = "Leave Combat";
@@ -185,7 +263,14 @@ namespace Combat_Tracker
                 {
                     if (x is Button)
                     {
-                        if (x.Name == "register")
+                        combatants.Where(c => x.Name.Equals(c.ID.ToString()))
+                                .ToList()
+                                .ForEach(ch =>
+                                {
+                                    ch.InCombat = false;
+                                });
+
+                        if (x.Name == "Leave Combat")
                         {
                             x.Parent.BackColor = Color.WhiteSmoke;
                             x.Text = "Enter Combat";
@@ -197,10 +282,10 @@ namespace Combat_Tracker
 
         private void StartRound_Click(object sender, EventArgs e)
         {
-            inCombat.Clear();
+            //inCombat.Clear();
             foreach (Character n in combatants)
                 n.CombatStep = 0;
-            CombatOrder.Controls.Clear();
+
             foreach (Panel ctrl in flowLayoutPanel1.Controls)
             {
                 foreach (Control x in ctrl.Controls)
@@ -210,15 +295,17 @@ namespace Combat_Tracker
                         if (x.Text == "Leave Combat")
                         {
                             string newName = ctrl.Name;
-
-                            foreach (Character com in combatants)
                             {
-                                if (newName == com.Name)
+                                foreach (Character com in combatants)
                                 {
-                                    if (!com.IsDown)
+                                    if (newName == com.Name)
                                     {
-                                        com.SetCombatStep();
-                                        inCombat.Add(com);
+                                        if (!com.IsDown)
+                                        {
+                                            com.SetCombatStep();
+                                            com.InCombat = true;
+                                            //inCombat.Add(com);
+                                        }
                                     }
                                 }
                             }
@@ -226,66 +313,12 @@ namespace Combat_Tracker
                     }
                 }
             }
-            var sortedQuery = inCombat.OrderByDescending(k => k.CombatStep);
-            sortedCombat = sortedQuery.ToList();
-            PopulateCombat(sortedCombat);
-        }
 
-        private void PopulateCombat(List<Character> x)
-        {
-            foreach (Character com in x)
-            {
-                Panel CharPanel = new Panel();
-                CharPanel.Name = com.Name;
-                CharPanel.Location = new Point(10, 10);
-                CharPanel.BackColor = Color.WhiteSmoke;
-                CharPanel.Size = new Size(190, 66);
-                CharPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                CombatOrder.Controls.Add(CharPanel);
-
-                GroupBox rollBox = new GroupBox();
-                rollBox.Size = new Size(47, 33);
-                rollBox.Location = new Point(63, 26);
-                rollBox.Text = "Roll";
-                CharPanel.Controls.Add(rollBox);
-
-                Label CharacterID = new Label();
-                CharacterID.Text = com.Name;
-                CharacterID.Font = new Font("Sans Serif", 10, FontStyle.Bold);
-                CharacterID.Location = new Point(3, 0);
-                CharacterID.AutoSize = true;
-                CharPanel.Controls.Add(CharacterID);
-
-                Label combatRoll = new Label();
-                combatRoll.Location = new Point(13, 11);
-                combatRoll.Size = new Size(25, 15);
-                combatRoll.Text = com.CombatStep.ToString();
-                combatRoll.Font = new Font("Sans Serif", 9, FontStyle.Bold);
-                rollBox.Controls.Add(combatRoll);
-                combatRoll.BringToFront();
-
-                Button up = new Button();
-                // up.Text = "up";
-                up.Location = new Point(170, 4);
-                up.Size = new Size(14, 25);
-                up.BackColor = Color.Black;
-                up.BackgroundImage = Properties.Resources.ArrowUp;
-                up.BackgroundImageLayout = ImageLayout.Stretch;
-                up.Click += new System.EventHandler(upOrder_Click);
-
-                Button down = new Button();
-                // down.Text = "down";
-                down.Location = new Point(170, 30);
-                down.Size = new Size(14, 25);
-                down.BackColor = Color.Black;
-                down.BackgroundImage = Properties.Resources.arrowdown;
-                down.BackgroundImageLayout = ImageLayout.Stretch;
-                CharPanel.Controls.Add(up);
-                up.BringToFront();
-                CharPanel.Controls.Add(down);
-                down.BringToFront();
-                down.Click += new System.EventHandler(downOrder_Click);
-            }
+            PopulateCombat(combatants
+                    .OrderByDescending(k => k.CombatStep)
+                    .Where(k => k.InCombat)
+                    .ToList());
+            //PopulateCombat(inCombat.OrderByDescending(k => k.CombatStep).ToList());
         }
 
         private void down_Click(object sender, EventArgs e)
@@ -337,7 +370,7 @@ namespace Combat_Tracker
                 {
                     if (File.Exists(fdlg.FileName))
                     {
-                        foreach (Character x in inCombat)
+                        foreach (Character x in combatants.Where(c => c.InCombat))
                         {
                             sw.WriteLine(x.Name);
                             sw.WriteLine(x.Skill);
@@ -364,24 +397,23 @@ namespace Combat_Tracker
                         while (sw.Peek() >= 0)
                         {
                             Character current = new Character(
-                            sw.ReadLine(),
-                            Convert.ToInt32(sw.ReadLine()),
-                            Convert.ToInt32(sw.ReadLine()),
-                            Convert.ToInt32(sw.ReadLine()),
-                            Convert.ToInt32(sw.ReadLine())
+                                    Interlocked.Increment(ref characterIds),
+                                    sw.ReadLine(),
+                                    Convert.ToInt32(sw.ReadLine()),
+                                    Convert.ToInt32(sw.ReadLine()),
+                                    Convert.ToInt32(sw.ReadLine()),
+                                    Convert.ToInt32(sw.ReadLine())
                             );
                             combatants.Add(current);
                             AddBatch(current);
                         }
-
-
-
                     }
 
                 }
             }
 
         }
+
         private void AddBatch(Character c)
         {
 
@@ -394,45 +426,37 @@ namespace Combat_Tracker
                 }
 
             }
-            PanelCreate(c);
+            flowLayoutPanel1.Controls.Add(CreateCharacterPanel(c));
         }
-        private void upOrder_Click(object sender, EventArgs e)
-        {
 
-            Button up = (Button)sender;
-
-            foreach (Character c in inCombat)
-            {
-                if (up.Parent.Name == c.Name)
-                {
-                    c.BumpUp();
-                }
-            }
-            var sortedQuery = inCombat.OrderByDescending(k => k.CombatStep);
-            sortedCombat.Clear();
-            CombatOrder.Controls.Clear();
-            sortedCombat = sortedQuery.ToList();
-            PopulateCombat(sortedCombat);
-
-        }
         private void downOrder_Click(object sender, EventArgs e)
         {
 
             Button down = (Button)sender;
 
-            foreach (Character c in inCombat)
+            foreach (Character c in combatants.Where(c => c.InCombat))
             {
                 if (down.Parent.Name == c.Name)
                 {
                     c.BumpDown();
                 }
             }
-            var sortedQuery = inCombat.OrderByDescending(k => k.CombatStep);
-            sortedCombat.Clear();
-            CombatOrder.Controls.Clear();
-            sortedCombat = sortedQuery.ToList();
-            PopulateCombat(sortedCombat);
+            PopulateCombat(combatants.Where(c => c.InCombat).OrderByDescending(k => k.CombatStep).ToList());
+        }
 
+        private void upOrder_Click(object sender, EventArgs e)
+        {
+
+            Button up = (Button)sender;
+
+            foreach (Character c in combatants.Where(c => c.InCombat))
+            {
+                if (up.Parent.Name == c.Name)
+                {
+                    c.BumpUp();
+                }
+            }
+            PopulateCombat(combatants.Where(c => c.InCombat).OrderByDescending(k => k.CombatStep).ToList());
         }
 
         private void enterAllInCombatButton_Click(object sender, EventArgs e)
@@ -443,7 +467,15 @@ namespace Combat_Tracker
                 {
                     if (x is Button)
                     {
-                        if (x.Name == "register")
+
+                        combatants.Where(c => x.Name.Equals(c.ID.ToString()))
+                                .ToList()
+                                .ForEach(ch =>
+                                {
+                                    ch.InCombat = true;
+                                });
+
+                        if (x.Text == "Enter Combat")
                         {
                             x.Parent.BackColor = Color.DarkGray;
                             x.Text = "Leave Combat";

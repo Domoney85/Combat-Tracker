@@ -77,7 +77,7 @@
             this.CreatePNL.TabIndex = 1;
             this.CreatePNL.Text = "Create Character";
             this.CreatePNL.UseVisualStyleBackColor = true;
-            this.CreatePNL.Click += new System.EventHandler(this.CreatePNL_Click);
+            this.CreatePNL.Click += new System.EventHandler(this.CreateCharacterButton_Click);
             // 
             // panel1
             // 
@@ -189,7 +189,7 @@
             this.combatToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(732, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(775, 24);
             this.menuStrip1.TabIndex = 11;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -277,7 +277,7 @@
             this.CombatOrder.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.CombatOrder.Location = new System.Drawing.Point(502, 37);
             this.CombatOrder.Name = "CombatOrder";
-            this.CombatOrder.Size = new System.Drawing.Size(215, 599);
+            this.CombatOrder.Size = new System.Drawing.Size(260, 599);
             this.CombatOrder.TabIndex = 12;
             // 
             // button1
@@ -304,7 +304,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 648);
+            this.ClientSize = new System.Drawing.Size(775, 648);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.CombatOrder);

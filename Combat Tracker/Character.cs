@@ -11,9 +11,11 @@ namespace Combat_Tracker
         public static Random rnd = new Random();
 
         public bool IsDown { get; set; }
+        public bool InCombat { get; set; }
         public int Wounds { get; set; }
         public double CombatStep { get; set; }
 
+        public int ID { get; private set; }
         public String Name { get; private set; }
         public String RName { get; private set; } // TODO: better name for this?
         public int Skill { get; private set; }
@@ -21,29 +23,19 @@ namespace Combat_Tracker
         public int Perception { get; private set; }
         public int Will { get; private set; }
 
-        private int misc;
         private int count;
         private double ocombatStep;
-
         private bool assist;
 
-        public Character(String n)
-            : this(n, 0, 0, 0, 0)
-        { }
-
-        public Character(String n, int sk, int cpx, int p, int w)
-            : this(n, sk, cpx, p, w, 0, 0)
-        { }
-
-        public Character(String n, int sk, int cpx, int p, int w, int m, int wo)
+        public Character(int id, String n, int sk, int cpx, int p, int w)
         {
+            ID = id;
             Name = RName = n;
             Skill = sk;
             Complexity = cpx;
             Perception = p;
             Will = w;
-            misc = m;
-            Wounds = wo;
+            Wounds = 0;
             assist = false;
         }
 
@@ -120,16 +112,6 @@ namespace Combat_Tracker
         {
             --CombatStep;
         }
-
-        //public void SetCombatStep(double n)
-        //{
-        //    combatStep = n;
-        //}
-
-        //public double getCombatStep()
-        //{
-        //    return combatStep;
-        //}
     }
 
 }

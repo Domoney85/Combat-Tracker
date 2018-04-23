@@ -113,6 +113,8 @@
   <ItemGroup>
     <Content Include="arrowdown.jpg" />
     <Content Include="ArrowUp.jpg" />
+    <Content Include="Resources\down-arrow.jpg" />
+    <Content Include="Resources\up-arrow.jpg" />
     <None Include="Resources\arrowdown.jpg" />
     <None Include="Resources\ArrowUp.jpg" />
   </ItemGroup>
