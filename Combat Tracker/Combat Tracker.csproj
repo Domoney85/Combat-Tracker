@@ -75,7 +75,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomUtils.cs" />
+    <Compile Include="TrackerUtils.cs" />
     <Compile Include="Roller.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
@@ -104,6 +104,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\close-button.png" />
     <Content Include="Resources\down-arrow.jpg" />
     <Content Include="Resources\up-arrow.jpg" />
     <None Include="Resources\arrowdown.jpg" />

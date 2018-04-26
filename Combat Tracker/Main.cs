@@ -213,7 +213,7 @@ namespace Combat_Tracker
             CombatPanel.Name = character.ID.ToString();
             CombatPanel.Location = new Point(10, 10);
             CombatPanel.BackColor = Color.WhiteSmoke;
-            CombatPanel.Size = new Size(234, 75);
+            CombatPanel.Size = new Size(244, 75);
             CombatPanel.BorderStyle = BorderStyle.Fixed3D;
 
             Panel characterPanel = CreateCharacterPanel(character);
@@ -260,12 +260,13 @@ namespace Combat_Tracker
 
             Button register = CreateCombatButton(character.InCombat, character.ID.ToString());
             Button down = CreateKOButton(character.IsDown);
+            Button remove = CreateRemoveButton();
 
             Panel newPanel = new Panel();
             newPanel.Name = character.ID.ToString();
             newPanel.Location = new Point(5, 6);
             newPanel.BackColor = character.IsDown ? Color.MistyRose : Color.WhiteSmoke;
-            newPanel.Size = new Size(190, 64);
+            newPanel.Size = new Size(200, 64);
             newPanel.BorderStyle = BorderStyle.Fixed3D;
             newPanel.Controls.Add(down);
             newPanel.Controls.Add(register);
@@ -275,6 +276,7 @@ namespace Combat_Tracker
             newPanel.Controls.Add(CharacterSkill);
             newPanel.Controls.Add(skillLBL);
             newPanel.Controls.Add(characterName);
+            newPanel.Controls.Add(remove);
 
             return newPanel;
         }
@@ -283,7 +285,7 @@ namespace Combat_Tracker
         {
             GroupBox rollBox = new GroupBox();
             rollBox.Size = new Size(30, 70);
-            rollBox.Location = new Point(195, 0);
+            rollBox.Location = new Point(205, 0);
 
             Button up = new Button();
             up.Location = new Point(2, 10);
@@ -365,6 +367,20 @@ namespace Combat_Tracker
             return down;
         }
 
+        private Button CreateRemoveButton()
+        {
+            Button b = new Button()
+            {
+                Size = new Size(15, 15),
+                Location = new Point(180, 0),
+                BackgroundImage = Properties.Resources.close_button,
+                BackgroundImageLayout = ImageLayout.Stretch,
+            };
+            b.Click += new EventHandler(remove_Click);
+            b.BringToFront();
+            return b;
+        }
+
         private void RedrawCharacterPanels()
         {
             characterStagingPanel.Controls.Clear();
@@ -444,5 +460,13 @@ namespace Combat_Tracker
 
         }
 
+        private void remove_Click(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            combatants.Where(c => c.ID.ToString().Equals(b.Parent.Name))
+                    .ToList()
+                    .ForEach(c => { combatants.Remove(c); });
+            RedrawCharacterPanels();
+        }
     }
 }
