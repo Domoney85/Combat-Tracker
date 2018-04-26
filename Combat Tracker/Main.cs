@@ -15,6 +15,8 @@ namespace Combat_Tracker
     {
         private int characterIds = 0;
         private Roller roller;
+        private NameGenerator names;
+
         List<Character> combatants;
 
         public Main()
@@ -22,13 +24,14 @@ namespace Combat_Tracker
             InitializeComponent();
             combatants = new List<Character>();
             roller = new Roller();
+            names = new NameGenerator();
         }
 
         private void createCharacter_Click(object sender, EventArgs e)
         {
             Character newCharacter = new Character(
                     Interlocked.Increment(ref characterIds),
-                    CharName.Text,
+                    names.nameValidation(CharName.Text),
                     Convert.ToInt32(csInput.Text),
                     Convert.ToInt32(cpxInput.Text),
                     Convert.ToInt32(perInput.Text),
@@ -189,6 +192,15 @@ namespace Combat_Tracker
             RedrawCharacterPanels();
         }
 
+        private void remove_Click(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            combatants.Where(c => c.ID.ToString().Equals(b.Parent.Name))
+                    .ToList()
+                    .ForEach(c => { combatants.Remove(c); });
+            RedrawCharacterPanels();
+        }
+
         private void woundsTextbox_TextChanged(object sender, EventArgs e)
         {
             TextBox woundTextBox = (TextBox)sender;
@@ -287,18 +299,19 @@ namespace Combat_Tracker
             rollBox.Size = new Size(30, 70);
             rollBox.Location = new Point(205, 0);
 
-            Button up = new Button();
+            Button up = new CustomButton();
             up.Location = new Point(2, 10);
             up.Size = new Size(25, 15);
             up.BackgroundImage = Properties.Resources.up_arrow;
             up.BackgroundImageLayout = ImageLayout.Stretch;
+            up.BackColor = Color.WhiteSmoke;
             up.Click += new EventHandler(orderUp_Click);
-            rollBox.Controls.Add(up);
             up.BringToFront();
             if (combatants.IndexOf(character) == 0)
             {
                 up.Enabled = false;
             }
+            rollBox.Controls.Add(up);
 
             Label combatRoll = new Label();
             combatRoll.Location = new Point(2, 30);
@@ -309,7 +322,7 @@ namespace Combat_Tracker
             rollBox.Controls.Add(combatRoll);
             combatRoll.BringToFront();
 
-            Button down = new Button();
+            Button down = new CustomButton();
             down.Location = new Point(2, 50);
             down.Size = new Size(25, 15);
             down.BackgroundImage = Properties.Resources.down_arrow;
@@ -369,14 +382,16 @@ namespace Combat_Tracker
 
         private Button CreateRemoveButton()
         {
-            Button b = new Button()
+            Button b = new CustomButton()
             {
                 Size = new Size(15, 15),
                 Location = new Point(180, 0),
                 BackgroundImage = Properties.Resources.close_button,
                 BackgroundImageLayout = ImageLayout.Stretch,
+                BackColor = Color.WhiteSmoke
             };
             b.Click += new EventHandler(remove_Click);
+
             b.BringToFront();
             return b;
         }
@@ -460,13 +475,17 @@ namespace Combat_Tracker
 
         }
 
-        private void remove_Click(object sender, EventArgs e)
+
+        private class CustomButton : Button
         {
-            Button b = (Button)sender;
-            combatants.Where(c => c.ID.ToString().Equals(b.Parent.Name))
-                    .ToList()
-                    .ForEach(c => { combatants.Remove(c); });
-            RedrawCharacterPanels();
+            public CustomButton()
+            {
+                FlatAppearance.BorderSize = 0;
+                FlatAppearance.BorderColor = Color.FromArgb(0, 255, 255, 255);
+                TabStop = false;
+                FlatStyle = FlatStyle.Flat;
+            }
         }
+
     }
 }

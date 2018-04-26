@@ -4,8 +4,6 @@ namespace Combat_Tracker
 {
     class Character
     {
-        public static Random rnd = new Random();
-
         public bool IsDown { get; set; }
         public bool InCombat { get; set; }
         public int Wounds { get; set; }
