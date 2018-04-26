@@ -18,3 +18,5 @@ E:\projects\sillco\Combat-Tracker\Combat Tracker\obj\Debug\Combat Tracker.pdb
 E:\projects\sillco\Combat-Tracker\Combat Tracker\bin\Debug\Combat Tracker.exe.config
 E:\projects\sillco\Combat-Tracker\Combat Tracker\bin\Debug\Combat Tracker.exe
 E:\projects\sillco\Combat-Tracker\Combat Tracker\bin\Debug\Combat Tracker.pdb
+E:\projects\sillco\Combat-Tracker\Combat Tracker\bin\Debug\RandomNameGenerator.dll
+E:\projects\sillco\Combat-Tracker\Combat Tracker\obj\Debug\Combat Tracker.csproj.CopyComplete

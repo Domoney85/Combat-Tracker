@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RandomNameGenerator;
 
 namespace Combat_Tracker
 {
@@ -27,5 +28,11 @@ namespace Combat_Tracker
             list[indexB] = tmp;
         }
 
+        internal static Gender RandomGender()
+        {
+            if (RandomNumber(0, 2) > 0)
+                return Gender.Male;
+            return Gender.Female;
+        }
     }
 }
