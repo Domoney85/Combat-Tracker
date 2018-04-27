@@ -1,0 +1,1 @@
+Random name generator dependency can be found here: https://www.nuget.org/packages/RandomNameGenerator/1.0.4
