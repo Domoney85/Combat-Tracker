@@ -13,9 +13,10 @@ namespace Combat_Tracker
 
     public partial class Main : Form
     {
-        private int characterIds = 0;
+
         private Roller roller;
         private NameGenerator names;
+        private readonly string fileTypes = "txt files (*.txt)|*.txt|Comma Seperated Files (*.csv)|*.csv";
 
         List<Character> combatants;
 
@@ -30,7 +31,7 @@ namespace Combat_Tracker
         private void createCharacter_Click(object sender, EventArgs e)
         {
             Character newCharacter = new Character(
-                    Interlocked.Increment(ref characterIds),
+                    TrackerUtils.getCharacterId(),
                     names.nameValidation(CharName.Text),
                     Convert.ToInt32(csInput.Text),
                     Convert.ToInt32(cpxInput.Text),
@@ -422,59 +423,28 @@ namespace Combat_Tracker
         private void saveCombatGroupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog fdlg = new SaveFileDialog();
-            fdlg.Filter = "txt files (*.txt)|*.txt";
-
-
+            fdlg.Filter = fileTypes;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                StreamWriter sw = new StreamWriter(fdlg.FileName);
-                {
-                    if (File.Exists(fdlg.FileName))
-                    {
-                        foreach (Character x in combatants.Where(c => c.InCombat))
-                        {
-                            sw.WriteLine(x.Name);
-                            sw.WriteLine(x.Skill);
-                            sw.WriteLine(x.Complexity);
-                            sw.WriteLine(x.Perception);
-                            sw.WriteLine(x.Will);
-                        }
-                    }
-                    sw.Close();
-                }
+                TrackerUtils.WriteCSVFile(fdlg.FileName, combatants);
             }
         }
 
         private void loadBatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog fdlg = new OpenFileDialog();
-            fdlg.Filter = "txt files (*.txt)|*.txt";
+            fdlg.Filter = fileTypes;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                StreamReader sw = new StreamReader(fdlg.FileName);
-                {
-                    if (File.Exists(fdlg.FileName))
+                TrackerUtils.ReadCSVFile(fdlg.FileName)
+                    .ForEach(c =>
                     {
-                        while (sw.Peek() >= 0)
-                        {
-                            Character current = new Character(
-                                    Interlocked.Increment(ref characterIds),
-                                    sw.ReadLine(),
-                                    Convert.ToInt32(sw.ReadLine()),
-                                    Convert.ToInt32(sw.ReadLine()),
-                                    Convert.ToInt32(sw.ReadLine()),
-                                    Convert.ToInt32(sw.ReadLine())
-                            );
-                            combatants.Add(current);
-                            AddBatch(current);
-                        }
-                    }
-
-                }
+                        combatants.Add(c);
+                        characterStagingPanel.Controls.Add(CreateCharacterPanel(c));
+                    });
             }
 
         }
-
 
         private class CustomButton : Button
         {

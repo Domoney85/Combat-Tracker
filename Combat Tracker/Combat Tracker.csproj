@@ -53,6 +53,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="RandomNameGenerator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RandomNameGenerator.1.0.4\lib\RandomNameGenerator.dll</HintPath>
     </Reference>
@@ -94,6 +95,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="NameGenerator.cs" />
+    <None Include="CombatGroups\testcsv.csv" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -109,6 +111,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CombatGroups\fakegroup.txt" />
+    <Content Include="CombatGroups\Jax.txt" />
+    <Content Include="CombatGroups\ONSgroup.txt" />
+    <Content Include="CombatGroups\PlayerGroup.txt" />
     <Content Include="Resources\close-button.png" />
     <Content Include="Resources\down-arrow.jpg" />
     <Content Include="Resources\up-arrow.jpg" />
