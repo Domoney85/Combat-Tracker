@@ -7,12 +7,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Collections.Concurrent;
+using NLog;
 
 namespace Combat_Tracker
 {
 
     public partial class Main : Form
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private Roller roller;
         private NameGenerator names;
@@ -75,12 +77,13 @@ namespace Combat_Tracker
 
         private void startRound_Click(object sender, EventArgs e)
         {
+            logger.Info("Starting new combat round.");
             combatants.Where(c => c.InCombat)
                 .ToList()
                 .ForEach(c =>
                 {
                     c.CombatRoll = roller.CalculateRoll(
-                        c.Skill, c.Perception, c.Will, c.Wounds, c.Assist);
+                        c.Skill, c.Perception, c.Will, c.Wounds, c.Assist, c.Name);
                 });
 
             combatants.Where(c => !c.InCombat)
@@ -120,7 +123,6 @@ namespace Combat_Tracker
                     c.IsDown = true;
                 });
 
-            //TODO janky and I don't like it
             down.Parent.BackColor = Color.MistyRose;
             down.Click -= kO_Click;
             down.Click += new EventHandler(revive_Click);
@@ -134,7 +136,6 @@ namespace Combat_Tracker
                 .ToList()
                 .ForEach(c => { c.IsDown = false; });
 
-            //TODO janky and I don't like it
             down.Parent.BackColor = Color.WhiteSmoke;
             down.Click -= revive_Click;
             down.Click += new EventHandler(kO_Click);

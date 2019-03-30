@@ -15,7 +15,9 @@ namespace Combat_Tracker
         public string nameValidation(string name)
         {
             if (string.Empty.Equals(name))
+            {
                 name = generateRandomName();
+            }
 
             rolls.AddOrUpdate(name, 1, (key, count) => count + 1);
             if (rolls.TryGetValue(name, out int v) && v > 1)
