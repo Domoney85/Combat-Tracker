@@ -55,6 +55,7 @@
             this.characterCombatPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.characterSummaryPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -189,7 +190,7 @@
             this.combatToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(775, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1199, 24);
             this.menuStrip1.TabIndex = 11;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -277,7 +278,7 @@
             this.characterCombatPanel.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.characterCombatPanel.Location = new System.Drawing.Point(502, 37);
             this.characterCombatPanel.Name = "characterCombatPanel";
-            this.characterCombatPanel.Size = new System.Drawing.Size(260, 599);
+            this.characterCombatPanel.Size = new System.Drawing.Size(271, 599);
             this.characterCombatPanel.TabIndex = 12;
             // 
             // button1
@@ -300,11 +301,21 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.endCombat_Click);
             // 
+            // characterSummaryPanel
+            // 
+            this.characterSummaryPanel.AutoScroll = true;
+            this.characterSummaryPanel.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.characterSummaryPanel.Location = new System.Drawing.Point(789, 37);
+            this.characterSummaryPanel.Name = "characterSummaryPanel";
+            this.characterSummaryPanel.Size = new System.Drawing.Size(385, 599);
+            this.characterSummaryPanel.TabIndex = 13;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 648);
+            this.ClientSize = new System.Drawing.Size(1199, 648);
+            this.Controls.Add(this.characterSummaryPanel);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.characterCombatPanel);
@@ -353,6 +364,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.FlowLayoutPanel characterCombatPanel;
+        private System.Windows.Forms.FlowLayoutPanel characterSummaryPanel;
     }
 }
 
