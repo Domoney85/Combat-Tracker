@@ -30,6 +30,9 @@ namespace Combat_Tracker
             names = new NameGenerator();
         }
 
+        /**
+         * 
+         */
         private void createCharacter_Click(object sender, EventArgs e)
         {
             Character newCharacter = new Character(
@@ -43,8 +46,46 @@ namespace Combat_Tracker
             combatants.Add(newCharacter);
 
             characterStagingPanel.Controls.Add(CreateCharacterPanel(newCharacter));
+            characterSummaryPanel.Controls.Add(CreateCharacterSummaryPanel(newCharacter));
         }
 
+        private readonly string WOUNDS_KEY = "woundLabel";
+
+        private Control CreateCharacterSummaryPanel(Character character)
+        {
+            Label characterName = new Label();
+            characterName.Text = character.Name;
+            characterName.Font = new Font("Sans Serif", 10, FontStyle.Bold);
+            characterName.Location = new Point(3, 0);
+            characterName.AutoSize = true;
+
+            Label willLBL = new Label();
+            willLBL.Text = "Will: " + character.Will.ToString();
+            willLBL.Font = new Font("Sans Serif", 10, FontStyle.Regular);
+            willLBL.Location = new Point(200, 0);
+
+            Label modLBL = new Label();
+            modLBL.Name = WOUNDS_KEY + character.ID.ToString();
+            modLBL.Text = "Wounds: " + character.Wounds.ToString();
+            modLBL.Font = new Font("Sans Serif", 10, FontStyle.Regular);
+            modLBL.Location = new Point(250, 0);
+
+            Panel newPanel = new Panel();
+            newPanel.Name = character.ID.ToString();
+            newPanel.Location = new Point(5, 6);
+            newPanel.BackColor = character.IsDown ? Color.MistyRose : Color.WhiteSmoke;
+            newPanel.Size = new Size(350, 32);
+            newPanel.BorderStyle = BorderStyle.Fixed3D;
+            newPanel.Controls.Add(modLBL);
+            newPanel.Controls.Add(willLBL);
+            newPanel.Controls.Add(characterName);
+
+            return newPanel;
+        }
+
+        /**
+         * Moves the character from the combat order, to the staging panel
+         */
         private void unregister_Click(object sender, EventArgs e)
         {
             Button x = (Button)sender;
@@ -60,6 +101,9 @@ namespace Combat_Tracker
             RedrawCharacterPanels();
         }
 
+        /**
+         * Moves the character from the staging panel to combat panel
+         */
         private void register_Click(object sender, EventArgs e)
         {
             Button x = (Button)sender;
@@ -75,6 +119,9 @@ namespace Combat_Tracker
             RedrawCharacterPanels();
         }
 
+        /**
+         * 
+         */
         private void startRound_Click(object sender, EventArgs e)
         {
             logger.Info("Starting new combat round.");
@@ -207,6 +254,7 @@ namespace Combat_Tracker
         {
             TextBox woundTextBox = (TextBox)sender;
             int wounds = 0;
+
             if (int.TryParse(woundTextBox.Text, out int n))
             {
                 wounds = n;
@@ -218,9 +266,12 @@ namespace Combat_Tracker
                 .ForEach(c =>
                 {
                     c.ApplyWounds(wounds);
+                    Label label = this.Controls.Find(WOUNDS_KEY + c.ID.ToString(), true).FirstOrDefault() as Label;
+                    label.Text = "Wounds: " + wounds.ToString();
                 });
+            woundTextBox.Text = wounds.ToString();
         }
-
+        
         private Panel CreateCombatPanel(Character character)
         {
             Panel CombatPanel = new Panel();
@@ -267,6 +318,7 @@ namespace Combat_Tracker
             modLBL.Location = new Point(45, 32);
 
             TextBox woundsTextbox = new TextBox();
+            woundsTextbox.Text = character.Wounds.ToString();
             woundsTextbox.TextChanged += new EventHandler(woundsTextbox_TextChanged);
             woundsTextbox.Location = new Point(92, 28);
             woundsTextbox.Size = new Size(25, 5);

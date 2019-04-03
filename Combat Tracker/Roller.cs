@@ -30,7 +30,7 @@ namespace Combat_Tracker
                 //make a will check 4 or higher
                 for (int i = 0; i < 2; i++)
                 {
-                    if ((TrackerUtils.RandomNumber(0, 6) + 1 + will) >= 4)
+                    if ((TrackerUtils.RandomNumber(0, 6) + 1 + will - wound) >= 4)
                     {
                         logger.Info("{} saved their will check", name);
                         return 1;
@@ -42,7 +42,7 @@ namespace Combat_Tracker
             }
             else
             {
-                int finalRoll = maxRoll + perception;
+                int finalRoll = maxRoll + perception - wound;
                 if (finalRoll < 1)
                 {
                     logger.Info("{} rolled and adjusted {}", name, 1);
