@@ -256,9 +256,14 @@ namespace Combat_Tracker
         private void remove_Click(object sender, EventArgs e)
         {
             Button b = (Button)sender;
+
             combatants.Where(c => c.ID.ToString().Equals(b.Parent.Name))
                     .ToList()
-                    .ForEach(c => { combatants.Remove(c); });
+                    .ForEach(c => {
+                        combatants.Remove(c);
+                        Control control = this.Controls.Find(SUM_PANEL + c.ID.ToString(), true).FirstOrDefault();
+                        this.characterSummaryPanel.Controls.Remove(control);
+                    });
             RedrawCharacterPanels();
         }
 
