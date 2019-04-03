@@ -179,8 +179,6 @@ namespace Combat_Tracker
             down.Click -= kO_Click;
             down.Click += new EventHandler(revive_Click);
             down.Text = "Revive";
-
-            
         }
 
         private void revive_Click(object sender, EventArgs e)
@@ -340,7 +338,6 @@ namespace Combat_Tracker
 
             Button register = CreateCombatButton(character.InCombat, character.ID.ToString());
             Button down = CreateKOButton(character.IsDown);
-            Button remove = CreateRemoveButton();
 
             Panel newPanel = new Panel();
             newPanel.Name = character.ID.ToString();
@@ -356,7 +353,12 @@ namespace Combat_Tracker
             newPanel.Controls.Add(CharacterSkill);
             newPanel.Controls.Add(skillLBL);
             newPanel.Controls.Add(characterName);
-            newPanel.Controls.Add(remove);
+
+            if (!character.InCombat)
+            {
+                Button remove = CreateRemoveButton();
+                newPanel.Controls.Add(remove);
+            }
 
             return newPanel;
         }
