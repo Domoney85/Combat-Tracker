@@ -268,7 +268,7 @@
             this.StartRound.Name = "StartRound";
             this.StartRound.Size = new System.Drawing.Size(155, 23);
             this.StartRound.TabIndex = 10;
-            this.StartRound.Text = "Start Combat Round";
+            this.StartRound.Text = "Roll Combat Round";
             this.StartRound.UseVisualStyleBackColor = true;
             this.StartRound.Click += new System.EventHandler(this.startRound_Click);
             // 
@@ -293,7 +293,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(298, 172);
+            this.button2.Location = new System.Drawing.Point(298, 64);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(155, 23);
             this.button2.TabIndex = 14;
