@@ -50,6 +50,7 @@ namespace Combat_Tracker
         }
 
         private readonly string WOUNDS_KEY = "woundLabel";
+        private readonly string SUM_PANEL = "sumPanel";
 
         private Control CreateCharacterSummaryPanel(Character character)
         {
@@ -71,7 +72,7 @@ namespace Combat_Tracker
             modLBL.Location = new Point(250, 0);
 
             Panel newPanel = new Panel();
-            newPanel.Name = character.ID.ToString();
+            newPanel.Name = SUM_PANEL + character.ID.ToString();
             newPanel.Location = new Point(5, 6);
             newPanel.BackColor = character.IsDown ? Color.MistyRose : Color.WhiteSmoke;
             newPanel.Size = new Size(350, 32);
@@ -162,28 +163,41 @@ namespace Combat_Tracker
 
         private void kO_Click(object sender, EventArgs e)
         {
+            Color downColor = Color.MistyRose;
+
             Button down = (Button)sender;
             combatants.Where(c => c.ID.ToString().Equals(down.Parent.Name))
                 .ToList()
                 .ForEach(c =>
                 {
                     c.IsDown = true;
+                    Panel sumPanel = this.Controls.Find(SUM_PANEL + c.ID.ToString(), true).FirstOrDefault() as Panel;
+                    sumPanel.BackColor = downColor;
                 });
 
-            down.Parent.BackColor = Color.MistyRose;
+            down.Parent.BackColor = downColor;
             down.Click -= kO_Click;
             down.Click += new EventHandler(revive_Click);
             down.Text = "Revive";
+
+            
         }
 
         private void revive_Click(object sender, EventArgs e)
         {
+            Color revColor = Color.WhiteSmoke;
+
             Button down = (Button)sender;
             combatants.Where(c => c.ID.ToString().Equals(down.Parent.Name))
                 .ToList()
-                .ForEach(c => { c.IsDown = false; });
+                .ForEach(c => 
+                {
+                    c.IsDown = false;
+                    Panel sumPanel = this.Controls.Find(SUM_PANEL + c.ID.ToString(), true).FirstOrDefault() as Panel;
+                    sumPanel.BackColor = revColor;
+                });
 
-            down.Parent.BackColor = Color.WhiteSmoke;
+            down.Parent.BackColor = revColor;
             down.Click -= revive_Click;
             down.Click += new EventHandler(kO_Click);
             down.Text = "Down";
