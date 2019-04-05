@@ -57,29 +57,42 @@ namespace Combat_Tracker
             Label characterName = new Label();
             characterName.Text = character.Name;
             characterName.Font = new Font("Sans Serif", 10, FontStyle.Bold);
-            characterName.Location = new Point(3, 0);
+            characterName.Location = new Point(3, 5);
             characterName.AutoSize = true;
 
             Label willLBL = new Label();
             willLBL.Text = "Will: " + character.Will.ToString();
             willLBL.Font = new Font("Sans Serif", 10, FontStyle.Regular);
-            willLBL.Location = new Point(200, 0);
+            willLBL.Location = new Point(210, 6);
+            willLBL.Size = new Size(50, 25);
 
             Label modLBL = new Label();
-            modLBL.Name = WOUNDS_KEY + character.ID.ToString();
-            modLBL.Text = "Wounds: " + character.Wounds.ToString();
+            modLBL.Text = "Wounds:";
             modLBL.Font = new Font("Sans Serif", 10, FontStyle.Regular);
-            modLBL.Location = new Point(250, 0);
+            modLBL.Location = new Point(260, 6);
+            modLBL.Size = new Size(65, 25);
+
+            TextBox woundsTextbox = new TextBox();
+            woundsTextbox.Name = WOUNDS_KEY + character.ID.ToString();
+            woundsTextbox.Text = character.Wounds.ToString();
+            woundsTextbox.TextChanged += new EventHandler(sumWoundsTextbox_TextChanged);
+            woundsTextbox.Location = new Point(325, 6);
+            woundsTextbox.Size = new Size(25, 5);
+            woundsTextbox.BringToFront();
+            
+            Button down = CreateKOButton(character.IsDown, new Point(150, 4));
 
             Panel newPanel = new Panel();
             newPanel.Name = SUM_PANEL + character.ID.ToString();
             newPanel.Location = new Point(5, 6);
             newPanel.BackColor = character.IsDown ? Color.MistyRose : Color.WhiteSmoke;
-            newPanel.Size = new Size(350, 32);
+            newPanel.Size = new Size(375, 32);
             newPanel.BorderStyle = BorderStyle.Fixed3D;
-            newPanel.Controls.Add(modLBL);
             newPanel.Controls.Add(willLBL);
             newPanel.Controls.Add(characterName);
+            newPanel.Controls.Add(down);
+            newPanel.Controls.Add(modLBL);
+            newPanel.Controls.Add(woundsTextbox);
 
             return newPanel;
         }
@@ -283,12 +296,46 @@ namespace Combat_Tracker
                 .ForEach(c =>
                 {
                     c.ApplyWounds(wounds);
-                    Label label = this.Controls.Find(WOUNDS_KEY + c.ID.ToString(), true).FirstOrDefault() as Label;
-                    label.Text = "Wounds: " + wounds.ToString();
+                    Control[] controls = this.Controls.Find(WOUNDS_KEY + c.ID.ToString(), true);
+                    foreach (Control textbox in controls)
+                    {
+                        textbox.Text = wounds.ToString();
+                    }
+                    
                 });
             woundTextBox.Text = wounds.ToString();
         }
-        
+
+        private void sumWoundsTextbox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox woundTextBox = (TextBox)sender;
+            String panelId = woundTextBox.Parent.Name.Substring(SUM_PANEL.Length);
+            int wounds = 0;
+
+            if (int.TryParse(woundTextBox.Text, out int n))
+            {
+                wounds = n;
+            }
+
+
+
+            // TODO: clean this up
+            // finds the combatant and adds wounds
+            combatants.Where(c => c.ID.ToString().Equals(panelId))
+                .ToList()
+                .ForEach(c =>
+                {
+                    c.ApplyWounds(wounds);
+                    Control[] controls = this.Controls.Find(WOUNDS_KEY + c.ID.ToString(), true);
+                    foreach (Control textbox in controls)
+                    {
+                        textbox.Text = wounds.ToString();
+                    }
+
+                });
+            woundTextBox.Text = wounds.ToString();
+        }
+
         private Panel CreateCombatPanel(Character character)
         {
             Panel CombatPanel = new Panel();
@@ -335,6 +382,7 @@ namespace Combat_Tracker
             modLBL.Location = new Point(45, 32);
 
             TextBox woundsTextbox = new TextBox();
+            woundsTextbox.Name = WOUNDS_KEY + character.ID.ToString();
             woundsTextbox.Text = character.Wounds.ToString();
             woundsTextbox.TextChanged += new EventHandler(woundsTextbox_TextChanged);
             woundsTextbox.Location = new Point(92, 28);
@@ -342,7 +390,7 @@ namespace Combat_Tracker
             woundsTextbox.BringToFront();
 
             Button register = CreateCombatButton(character.InCombat, character.ID.ToString());
-            Button down = CreateKOButton(character.IsDown);
+            Button down = CreateKOButton(character.IsDown, new Point(125, 28));
 
             Panel newPanel = new Panel();
             newPanel.Name = character.ID.ToString();
@@ -435,11 +483,11 @@ namespace Combat_Tracker
             return register;
         }
 
-        private Button CreateKOButton(bool isDown)
+        private Button CreateKOButton(bool isDown, Point location)
         {
             Button down = new Button();
             down.Font = new Font("Sans Serif", 7, FontStyle.Regular);
-            down.Location = new Point(125, 28);
+            down.Location = location;
             down.Size = new Size(50, 20);
             down.BringToFront();
             if (isDown)

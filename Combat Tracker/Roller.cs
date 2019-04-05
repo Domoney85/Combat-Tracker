@@ -14,10 +14,18 @@ namespace Combat_Tracker
 
         public int CalculateRoll(int skill, int perception, int will, int wound, bool isAssit, string name)
         {
-            ConcurrentDictionary<int, int> rolls = rollDice(skill);
-
-            int maxRoll = rolls.Keys.Max();
-
+            ConcurrentDictionary<int, int> rolls = null;
+            int maxRoll = -1;
+            if (skill > 0)
+            {
+                rolls = rollDice(skill);
+                maxRoll = rolls.Keys.Max();
+            } else
+            {
+                rolls = rollDice(2);
+                maxRoll = rolls.Keys.Min();
+            }
+             
             // gives the roll if it was a 6
             if (maxRoll == 6)
             {
